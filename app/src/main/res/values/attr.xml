@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewPagerIndicator">
+        <attr name="indicatorColor" format="color" />
+        <attr name="highLightTextColor" format="color" />
+        <attr name="defaultTextColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="indicatorHeight" format="dimension" />
+        <attr name="indicatorWidth" format="dimension" />
+        <attr name="visibleMenuCount" format="integer" />
+        <attr name="indicatorLimit" format="integer" />
+        <attr name="firstPosition" format="integer" />
+    </declare-styleable>
+</resources>

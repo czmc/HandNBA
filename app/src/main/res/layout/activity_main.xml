@@ -1,0 +1,185 @@
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/flexible_space_height">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/flexible_space_height"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/head_bg" />
+
+                    <ImageView
+                        android:id="@+id/im_team_left"
+                        android:layout_width="@dimen/img_size"
+                        android:layout_height="@dimen/img_size" />
+
+                    <TextView
+                        android:id="@+id/team1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/btn_state"
+                        android:clickable="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
+
+                    <ImageView
+                        android:id="@+id/im_team_right"
+                        android:layout_width="@dimen/img_size"
+                        android:layout_height="@dimen/img_size"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/team2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/btn_state"
+                        android:clickable="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:id="@+id/score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/team1"
+                        android:layout_centerHorizontal="true"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="0:0"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp" />
+
+                </RelativeLayout>
+
+                <me.czmc.handnba.view.widget.MeatureHeightViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/indicator_height"
+                    android:alwaysDrawnWithCache="true" />
+            </LinearLayout>
+
+        </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+        <View
+            android:id="@+id/flexible_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:minHeight="?attr/actionBarSize"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/btn_state"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:minHeight="?attr/actionBarSize"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+
+            <RelativeLayout
+                android:id="@+id/zone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/flexible_space_height"
+                    android:background="@android:color/transparent" />
+
+                <ImageView
+                    android:id="@+id/im_team_left_move"
+                    android:layout_width="@dimen/img_size"
+                    android:layout_height="@dimen/img_size" />
+            </RelativeLayout>
+
+            <me.czmc.handnba.view.widget.ViewPagerIndicator
+                android:id="@+id/viewPagerIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/indicator_height"
+                android:layout_below="@id/zone"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:defaultTextColor="#ff9898"
+                app:firstPosition="1"
+                app:highLightTextColor="#ffffff"
+                app:indicatorColor="#ffffff"
+                app:indicatorHeight="10dp"
+                app:indicatorLimit="3"
+                app:indicatorWidth="20dp"
+                app:textSize="16sp"
+                app:visibleMenuCount="3">
+
+
+            </me.czmc.handnba.view.widget.ViewPagerIndicator>
+        </RelativeLayout>
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

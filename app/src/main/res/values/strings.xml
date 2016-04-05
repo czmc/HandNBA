@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">掌上NBA</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hteam">主场</string>
+    <string name="vteam">客场</string>
+    <string name="about">关于</string>
+    <string name="checkupdate">检查更新</string>
+    <string name="exit">退出</string>
+
+</resources>
