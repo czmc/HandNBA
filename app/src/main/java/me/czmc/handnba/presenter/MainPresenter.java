@@ -34,6 +34,7 @@ public class MainPresenter {
     }
 
     public void loadData() {
+        mViewImp.showProgress("卖力加载中..");
         Retrofit retrofit = new Retrofit.Builder().baseUrl(NBAApi.url)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -64,6 +65,7 @@ public class MainPresenter {
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ListObj>() {
             @Override
             public void onCompleted() {
+                mViewImp.dismissProgress();
                 mViewImp.addMenuTitle("查询");
                 mViewImp.addFragment(SearchFragment.newInstance(teammatchs));
                 mViewImp.loadfinish();
@@ -71,7 +73,7 @@ public class MainPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                mViewImp.dismissProgress();
             }
 
             @Override
@@ -107,11 +109,12 @@ public class MainPresenter {
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Live>() {
             @Override
             public void onCompleted() {
-
+                mViewImp.dismissProgress();
             }
 
             @Override
             public void onError(Throwable e) {
+                mViewImp.dismissProgress();
                 Log.i("mydata", e.toString() + " | " + e.getMessage() + " |" + e.getCause());
             }
 

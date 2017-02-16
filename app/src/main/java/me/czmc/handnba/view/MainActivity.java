@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,12 +25,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
-import com.squareup.picasso.Picasso;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
@@ -39,48 +38,50 @@ import com.umeng.update.UpdateStatus;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.czmc.handnba.R;
 import me.czmc.handnba.presenter.MainPresenter;
 import me.czmc.handnba.utils.ToolUtils;
+import me.czmc.handnba.view.widget.CustomViewpager;
+import me.czmc.handnba.view.widget.ProgressDialog;
 import me.czmc.handnba.view.widget.ViewPagerIndicator;
 import me.czmc.handnba.viewImp.IMainView;
 
 public class MainActivity extends AppCompatActivity implements IMainView, ObservableScrollViewCallbacks, View.OnClickListener {
-    @Bind(R.id.scroll)
+    @BindView(R.id.scroll)
     ObservableScrollView scrollView;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView mTitleView;
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolbarView;
-    @Bind(R.id.flexible_space)
+    @BindView(R.id.flexible_space)
     View mFlexibleSpaceView;
-    @Bind(R.id.body)
+    @BindView(R.id.body)
     LinearLayout body;
-    @Bind(R.id.header)
+    @BindView(R.id.header)
     RelativeLayout header;
-    @Bind(R.id.image)
+    @BindView(R.id.image)
     ImageView image;
-    @Bind(R.id.im_team_left)
+    @BindView(R.id.im_team_left)
     ImageView im_team_left;
-    @Bind(R.id.im_team_right)
+    @BindView(R.id.im_team_right)
     ImageView im_team_right;
-    @Bind(R.id.im_team_left_move)
+    @BindView(R.id.im_team_left_move)
     ImageView im_team_left_move;
-    @Bind(R.id.subtitle)
+    @BindView(R.id.subtitle)
     TextView subtitleView;
-    @Bind(R.id.score)
+    @BindView(R.id.score)
     TextView score;
-    @Bind(R.id.team1)
+    @BindView(R.id.team1)
     TextView team1;
-    @Bind(R.id.team2)
+    @BindView(R.id.team2)
     TextView team2;
-    @Bind(R.id.viewpager)
-    ViewPager viewPager;
-    @Bind(R.id.viewPagerIndicator)
+    @BindView(R.id.viewpager)
+    CustomViewpager viewPager;
+    @BindView(R.id.viewPagerIndicator)
     ViewPagerIndicator viewPagerIndicator;
-    @Bind(R.id.swipeRefreshLayout)
+    @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
     private int mFlexibleSpaceHeight;
     private int movex;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, Observ
     private TagFragmentPagerAdapter fragmentPagerAdapter;
     private final String TAG = "handnbaLog";
     private ActionBar mActionBar;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, Observ
                 return false;
             }
         });
+        viewPager.setOffscreenPageLimit(4);
     }
 
     public int getFlexibleSpaceHeight() {
@@ -151,7 +154,23 @@ public class MainActivity extends AppCompatActivity implements IMainView, Observ
         subtitleView.setTag(liveurl);
         subtitleView.setOnClickListener(this);
     }
+    /**
+     * 显示进度条对话框
+     */
+    public void showProgress(String content){
+        dismissProgress();
+        progressDialog = ProgressDialog.show(this,content);
+        progressDialog.setCancelable(false);
+    }
 
+    /**
+     * 关闭进度条对话框
+     */
+    public void dismissProgress(){
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
     @Override
     public void setScore(String score) {
         this.score.setText(score);
@@ -159,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, Observ
 
     @Override
     public void setPlayer1(String url, String name,String player1url) {
-        Picasso.with(this).load(url).into(im_team_left);
+        Glide.with(this).load(url).into(im_team_left);
         team1.setText(name);
         team1.setTag(player1url);
         team1.setOnClickListener(this);
@@ -167,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, Observ
 
     @Override
     public void setPlayer2(String url, String name,String player2url) {
-        Picasso.with(this).load(url).into(im_team_left_move);
-        Picasso.with(this).load(url).into(im_team_right);
+        Glide.with(this).load(url).into(im_team_left_move);
+        Glide.with(this).load(url).into(im_team_right);
         team2.setText(name);
         team2.setTag(player2url);
         team2.setOnClickListener(this);
@@ -342,8 +361,13 @@ public class MainActivity extends AppCompatActivity implements IMainView, Observ
         String url = (String)v.getTag();
         Intent intent = new Intent(MainActivity.this,WebActivity.class);
         intent.putExtra("text",name);
-        intent.putExtra("url",url);
-        startActivity(intent);
+        if(url.startsWith("http://") || url.startsWith("https://")){
+            intent.putExtra("url",url);
+            startActivity(intent);
+        }else {
+            Toast.makeText(MainActivity.this,"比赛已经结束！",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private class TagFragmentPagerAdapter extends FragmentPagerAdapter {

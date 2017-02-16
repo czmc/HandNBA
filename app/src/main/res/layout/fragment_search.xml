@@ -9,12 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:background="#fff"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
         android:paddingTop="10dp">
 
-        <EditText
+        <me.czmc.handnba.view.widget.NiceSpinner
             android:id="@+id/hteam"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:textTint="@color/text_black"
+            android:padding="5dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -31,8 +35,10 @@
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
 
-        <EditText
+        <me.czmc.handnba.view.widget.NiceSpinner
             android:id="@+id/vteam"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:textTint="@color/text_black"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -54,6 +60,7 @@
             android:textStyle="bold" />
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -61,6 +68,8 @@
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:minHeight="200dp"
+        />
 
 </LinearLayout>

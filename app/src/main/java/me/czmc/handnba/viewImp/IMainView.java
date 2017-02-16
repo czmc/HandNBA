@@ -11,4 +11,6 @@ public interface IMainView {
     void addFragment(Fragment fragment);
     void clearData();
     void loadfinish();
+    void showProgress(String msg);
+    void dismissProgress();
 }

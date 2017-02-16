@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.github.ksoichiro.android.observablescrollview.ObservableWebView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/webview"
+    android:orientation="vertical"
     >
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#ff0"
+        android:padding="0dp"
+        >
+    </ProgressBar>
+    <com.github.ksoichiro.android.observablescrollview.ObservableWebView
+        android:id="@+id/webview"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
 
 
-</com.github.ksoichiro.android.observablescrollview.ObservableWebView>
+    </com.github.ksoichiro.android.observablescrollview.ObservableWebView>
+</LinearLayout>

@@ -11,12 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.czmc.handnba.R;
 import me.czmc.handnba.data.entity.Combat;
@@ -24,9 +24,9 @@ import me.czmc.handnba.presenter.TeamPresenter;
 import me.czmc.handnba.viewImp.ITeamView;
 
 public class ITeamActivity extends AppCompatActivity implements ITeamView, View.OnClickListener, ObservableScrollViewCallbacks {
-    @Bind(R.id.rootView)
+    @BindView(R.id.rootView)
     LinearLayout rootView;
-    @Bind(R.id.scrollview)
+    @BindView(R.id.scrollview)
     ObservableScrollView scrollView;
     private ImageView team1_logo;
     private ImageView team2_logo;
@@ -75,8 +75,8 @@ public class ITeamActivity extends AppCompatActivity implements ITeamView, View.
         link1 = (TextView) view.findViewById(R.id.link1);
         link2 = (TextView) view.findViewById(R.id.link2);
         status = (TextView) view.findViewById(R.id.status);
-        Picasso.with(this).load(combat.player1logo).into(team1_logo);
-        Picasso.with(this).load(combat.player2logo).into(team2_logo);
+        Glide.with(this).load(combat.player1logo).placeholder(R.mipmap.icon_default).into(team1_logo);
+        Glide.with(this).load(combat.player2logo).placeholder(R.mipmap.icon_default).into(team2_logo);
         team1_name.setText(combat.player1);
         team1_name.setTag(combat.player1url);
         team1_name.setOnClickListener(this);

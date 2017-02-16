@@ -11,17 +11,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.czmc.handnba.R;
 import me.czmc.handnba.data.entity.Bottomlink;
-import me.czmc.handnba.data.entity.Livelink;
 import me.czmc.handnba.data.entity.Combat;
+import me.czmc.handnba.data.entity.Livelink;
 
 /**
  * Created by MZone on 3/27/2016.
@@ -32,23 +33,23 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     public static final String BUNDLE_LIVELINK = "BUNDLE_LIVELINK";
     private View rootView;
 
-    @Bind(R.id.team1_logo)
+    @BindView(R.id.team1_logo)
     ImageView team1_logo;
-    @Bind(R.id.team2_logo)
+    @BindView(R.id.team2_logo)
     ImageView team2_logo;
-    @Bind(R.id.team1_name)
+    @BindView(R.id.team1_name)
     TextView team1_name;
-    @Bind(R.id.team2_name)
+    @BindView(R.id.team2_name)
     TextView team2_name;
-    @Bind(R.id.score)
+    @BindView(R.id.score)
     TextView score;
-    @Bind(R.id.time)
+    @BindView(R.id.time)
     TextView time;
-    @Bind(R.id.status)
+    @BindView(R.id.status)
     TextView status;
-    @Bind(R.id.link1)
+    @BindView(R.id.link1)
     TextView link1;
-    @Bind(R.id.link2)
+    @BindView(R.id.link2)
     TextView link2;
 
 
@@ -70,7 +71,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         ArrayList<Bottomlink> bottomlinks = (ArrayList) getArguments().getParcelableArrayList(BUNDLE_BOTTOMLINK);
         ArrayList<Livelink> livelinks = (ArrayList) getArguments().getParcelableArrayList(BUNDLE_LIVELINK);
         if (bottomlinks != null) {
-            View view =inflater.inflate(R.layout.item_bottomlink, container,false);
+            View view = inflater.inflate(R.layout.item_bottomlink, container, false);
             TextView live_link1 = (TextView) view.findViewById(R.id.live_link1);
             TextView live_link2 = (TextView) view.findViewById(R.id.live_link2);
             TextView live_link3 = (TextView) view.findViewById(R.id.live_link3);
@@ -82,12 +83,15 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
             links.add(live_link4);
             if (livelinks != null) {
                 view.findViewById(R.id.live).setVisibility(View.VISIBLE);
-                for(int i=0;i<livelinks.size();i++){
+                for (int i = 0; i < livelinks.size(); i++) {
                     links.get(i).setText(livelinks.get(i).text);
                     links.get(i).setTag(livelinks.get(i).url);
                     links.get(i).setOnClickListener(this);
+                    if (!livelinks.get(i).url.startsWith("http://") && !livelinks.get(i).url.startsWith("https://")) {
+                        links.get(i).setVisibility(View.GONE);
+                    }
                 }
-                for(int i=4-livelinks.size();i<4;i++){
+                for (int i = 4 - livelinks.size(); i < 4; i++) {
                     links.get(i).setVisibility(View.GONE);
                 }
             }
@@ -100,21 +104,24 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
             links.add(bottom_link2);
             links.add(bottom_link3);
             links.add(bottom_link4);
-            for(int i=0;i<bottomlinks.size();i++){
+            for (int i = 0; i < bottomlinks.size(); i++) {
                 links.get(i).setText(bottomlinks.get(i).text);
                 links.get(i).setTag(bottomlinks.get(i).url);
                 links.get(i).setOnClickListener(this);
+                if (!bottomlinks.get(i).url.startsWith("http://") && !bottomlinks.get(i).url.startsWith("https://")) {
+                    links.get(i).setVisibility(View.GONE);
+                }
             }
             links.clear();
-            links=null;
+            links = null;
             ((LinearLayout) rootView).addView(view);
         }
         OnTeamNameClick mOnTeamNameClick = new OnTeamNameClick();
         for (Combat combat : combats) {
             View view = LayoutInflater.from(getContext()).inflate(R.layout.item_match, null);
             ButterKnife.bind(this, view);
-            Picasso.with(getContext()).load(combat.player1logobig).into(team1_logo);
-            Picasso.with(getContext()).load(combat.player2logobig).into(team2_logo);
+            Glide.with(getContext()).load(combat.player1logo).placeholder(R.mipmap.icon_default).into(team1_logo);
+            Glide.with(getContext()).load(combat.player2logo).placeholder(R.mipmap.icon_default).into(team2_logo);
             team1_name.setText(combat.player1);
             team1_name.setTag(combat.player1);
             team1_name.setOnClickListener(mOnTeamNameClick);
@@ -149,17 +156,25 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getActivity(), WebActivity.class);
-        intent.putExtra("text", ((TextView)v).getText());
-        intent.putExtra("url", (String)v.getTag());
-        getActivity().startActivity(intent);
+        intent.putExtra("text", ((TextView) v).getText());
+        String url = (String) v.getTag();
+        if (url.startsWith("http://") || url.startsWith("https://")) {
+            intent.putExtra("url", url);
+            getActivity().startActivity(intent);
+        } else {
+            Toast.makeText(getContext(), "链接无效！", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
+
     private class OnTeamNameClick implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(),ITeamActivity.class);
+            Intent intent = new Intent(getActivity(), ITeamActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("name",(String)v.getTag());
+            intent.putExtra("name", (String) v.getTag());
             startActivity(intent);
         }
     }

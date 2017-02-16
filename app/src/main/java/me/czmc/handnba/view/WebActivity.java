@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.DownloadListener;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ObservableWebView;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.czmc.handnba.R;
 
@@ -22,8 +28,11 @@ public class WebActivity extends AppCompatActivity implements ObservableScrollVi
 
     private String url;
     private String name;
-    @Bind(R.id.webview)
+    @BindView(R.id.webview)
     ObservableWebView webView;
+    @BindView(R.id.progress_bar)
+    ProgressBar progress_bar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +57,28 @@ public class WebActivity extends AppCompatActivity implements ObservableScrollVi
                 view.loadUrl(url);
                 return true;
             }
-        });
 
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                super.onReceivedError(view, request, error);
+                Toast.makeText(WebActivity.this,error.toString(),Toast.LENGTH_SHORT).show();
+            }
+        });
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                if (newProgress == 100) {
+                    progress_bar.setVisibility(View.GONE);
+                } else {
+                    if (View.INVISIBLE == progress_bar.getVisibility()) {
+                        progress_bar.setVisibility(View.VISIBLE);
+                    }
+                    progress_bar.setProgress(newProgress);
+                }
+                super.onProgressChanged(view, newProgress);
+            }
+
+        });
         webView.loadUrl(url);
     }
 

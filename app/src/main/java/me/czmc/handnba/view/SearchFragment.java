@@ -7,18 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import me.czmc.handnba.R;
 import me.czmc.handnba.data.entity.Teammatch;
 import me.czmc.handnba.presenter.SearchPresenter;
+import me.czmc.handnba.view.widget.NiceSpinner;
 import me.czmc.handnba.viewImp.ISearchView;
 
 /**
@@ -27,12 +27,12 @@ import me.czmc.handnba.viewImp.ISearchView;
 public class SearchFragment extends Fragment implements ISearchView {
     private View rootView;
     private SearchPresenter searchPresenter;
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     FrameLayout container;
-    @Bind(R.id.hteam)
-    EditText hteam;
-    @Bind(R.id.vteam)
-    EditText vteam;
+    @BindView(R.id.hteam)
+    NiceSpinner hteam;
+    @BindView(R.id.vteam)
+    NiceSpinner vteam;
 
     @OnFocusChange({R.id.hteam, R.id.vteam})
     public void focusChange(boolean focus) {
@@ -48,6 +48,7 @@ public class SearchFragment extends Fragment implements ISearchView {
         if (hteamName == null) return;
         if (vteamName == null) return;
         searchPresenter.search(hteamName, vteamName);
+        ((MainActivity)getActivity()).viewPager.resetHeight(3);
     }
 
     public SearchFragment() {
@@ -55,6 +56,7 @@ public class SearchFragment extends Fragment implements ISearchView {
 
     public static SearchFragment newInstance(ArrayList<Teammatch> teammatches) {
         Bundle args = new Bundle();
+        args.putParcelableArrayList("teams",teammatches);
         SearchFragment fragment = new SearchFragment();
         fragment.setArguments(args);
         return fragment;
@@ -66,6 +68,17 @@ public class SearchFragment extends Fragment implements ISearchView {
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, rootView);
         searchPresenter = new SearchPresenter(this);
+        ArrayList<Teammatch> teammatches=getArguments().getParcelableArrayList("teams");
+        ArrayList<String> teamnames = new ArrayList<>();
+       if(teammatches==null || teammatches.isEmpty()){
+
+       }else {
+           for (Teammatch team : teammatches) {
+               teamnames.add(team.name);
+           }
+           hteam.attachDataSource(teamnames);
+           vteam.attachDataSource(teamnames);
+       }
         return rootView;
     }
 

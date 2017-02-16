@@ -40,7 +40,7 @@ public class ViewPagerIndicator extends LinearLayout implements ViewPager.OnPage
     private float mStartY;//指针画笔第一位置纵坐标
     private float moveDelta = 0;//移动的增量
     private int mScreenWidth;//屏幕宽
-    private ViewPager mViewPager;
+    private CustomViewpager mViewPager;
     private View lastChild;//记录上一个指针所指的位置，用于复原高亮
     private OnPageChangeListener mOnPageChangeListener;
 
@@ -86,7 +86,7 @@ public class ViewPagerIndicator extends LinearLayout implements ViewPager.OnPage
      *
      * @param viewpager
      */
-    public void setViewPager(ViewPager viewpager) {
+    public void setViewPager(CustomViewpager viewpager) {
         this.mViewPager = viewpager;
         if (viewpager != null) {
             viewpager.setOnPageChangeListener(this);
@@ -112,7 +112,6 @@ public class ViewPagerIndicator extends LinearLayout implements ViewPager.OnPage
             if (mViewPager.getCurrentItem() == mFirstPosition)
                 onPageSelected(mFirstPosition);
             mViewPager.setCurrentItem(mFirstPosition);
-
         }
     }
 
@@ -209,6 +208,7 @@ public class ViewPagerIndicator extends LinearLayout implements ViewPager.OnPage
             ((TextView) lastChild).setTextColor(mDefaultTextColor);
         }
         lastChild = child;
+        mViewPager.resetHeight(position);
     }
 
     @Override
